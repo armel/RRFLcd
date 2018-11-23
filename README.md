@@ -1,5 +1,5 @@
 # RRFTracker
-Suivi temps réel de l'activité du réseau [RRF](https://f5nlg.wordpress.com/2015/12/28/nouveau-reseau-french-repeater-network/) (Réseau des Répéteurs Francophone).
+Suivi temps réel de l'activité du réseau [RRF](https://f5nlg.wordpress.com/2015/12/28/nouveau-reseau-french-repeater-network/) (Réseau des Répéteurs Francophone). Une video du fonctionnement est visible sur [Youtube](https://www.youtube.com/watch?v=3QY_RpRebKc) ;)
 
 ## Principe de fonctionnement
 
@@ -14,8 +14,6 @@ Si un QSO est en cours, RRFTracker affichera sur,
 
 * la première ligne: l'indicatif du dernier noeud étant passé en émission,
 * la seconde ligne: l'indicatif du noeud en cours d'émission.
-
-Une video du fonctionnement est visible sur [Youtube](https://www.youtube.com/watch?v=3QY_RpRebKc) ;)
 
 Concernant les LEDs de status,
 
