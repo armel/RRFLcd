@@ -1,5 +1,5 @@
 # RRFTracker
-Suivi temps réel de l'activité du réseau [RRF](https://f5nlg.wordpress.com/2015/12/28/nouveau-reseau-french-repeater-network/) (Réseau des Répéteurs Francophone). Une video du fonctionnement est visible sur [Youtube](https://www.youtube.com/watch?v=3QY_RpRebKc) ;)
+Suivi temps réel de l'activité du réseau [RRF](https://f5nlg.wordpress.com/2015/12/28/nouveau-reseau-french-repeater-network/) (Réseau des Répéteurs Francophones). Une video du fonctionnement est visible sur [Youtube](https://www.youtube.com/watch?v=3QY_RpRebKc) ;)
 
 ## Principe de fonctionnement
 
