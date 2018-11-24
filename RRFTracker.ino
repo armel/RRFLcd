@@ -23,7 +23,7 @@ LiquidCrystal_I2C lcd(0x27, WIDTH, HEIGHT); // Change I2C adress 0x27, width and
 
 bool debug = false;
 
-//Wifi config
+//Wifi config, change it !
 
 const char* ssid     = "Your SSID";
 const char* password = "Your Password";
@@ -163,7 +163,7 @@ void loop() {
         lcd.print(tmp);
       }
     }
-    http.end();                 //Close connection
+    http.end();      //Close connection
   }
-  delay(REFRESH);    //Send a request every 3 seconds
+  delay(REFRESH);    //Send a request after a pause
 }
