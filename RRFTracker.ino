@@ -38,6 +38,7 @@ String call_previous_next = "RRF";
 
 String tmp;
 
+bool blanc = true;
 int qso = 0;
 
 void setup() {
@@ -124,7 +125,7 @@ void loop() {
       //If transmitter...
       
       if (search_stop != search_start) {
-        
+        blanc = false;
         tmp = page.substring(search_start, search_stop);
         
         if (tmp == "RRF1") {
@@ -154,6 +155,11 @@ void loop() {
         digitalWrite(D5, LOW);
         digitalWrite(D8, HIGH);
         
+        if (blanc == false) {
+          blanc = true;
+          qso++;
+        }
+
         call_previous = call_previous_next;
 
         tmp = "Total TX ";
