@@ -48,9 +48,9 @@ void setup() {
   }
 
   //Init LED pins
-  pinMode(D4, OUTPUT);
-  pinMode(D5, OUTPUT);
-  pinMode(D8, OUTPUT);
+  pinMode(D4, OUTPUT);        // HTTP Request
+  pinMode(D5, OUTPUT);        // Transmitter activ
+  pinMode(D8, OUTPUT);        // Transmitter inactiv
 
   //Init LCD
   lcd.begin(WIDTH, HEIGHT);
