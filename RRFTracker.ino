@@ -7,6 +7,7 @@
 #include <LiquidCrystal_I2C.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
+#include <time.h>
 
 //Time interval for the RRFTracker to refresh itself
 
@@ -28,6 +29,11 @@ bool debug = false;
 const char* ssid     = "Your SSID";
 const char* password = "Your Password";
 
+//Time config
+
+int timezone = 1;
+int dst = 0;
+
 //Global variables, not really clean...
 
 String url = "http://rrf.f5nlg.ovh/";
@@ -35,10 +41,12 @@ String url = "http://rrf.f5nlg.ovh/";
 String call_activ;
 String call_previous = "RRF";
 String call_previous_next = "RRF";
+String call_time = "Waiting TX";
 
 String tmp;
 
 bool blanc = true;
+bool blanc_alternate = true;
 int qso = 0;
 
 void setup() {
@@ -80,13 +88,31 @@ void setup() {
   lcd.print(WiFi.localIP());
 
   delay(1000);
+
+  lcd.clear();
+
+  //Time configuration
+  lcd.setCursor(0, 0);
+  lcd.print("Waiting for time");
+  lcd.setCursor(0, 1);
+
+  configTime(timezone * 3600, dst * 3600, "pool.ntp.org", "time.nist.gov");
+  while (!time(nullptr)) {
+    delay(250);
+    lcd.print(".");
+  }
+  
+  delay(1000);
 }
 
 void loop() {
   int tab;
   int search_start, search_stop;
+  time_t now = time(nullptr);
+  struct tm * timeinfo;
   String page;
-  
+
+  timeinfo = localtime(&now);  
   if (WiFi.status() == WL_CONNECTED) {
 
     digitalWrite(D4, HIGH);
@@ -140,11 +166,29 @@ void loop() {
           digitalWrite(D5, HIGH);
           digitalWrite(D8, LOW);
           call_activ = tmp;
+
+          if (call_activ.startsWith("(60) F1ZCY") == true)        // Optimize F1ZCY ...
+            call_activ = "(60) F1ZCY V/U";
+          else if (call_activ.startsWith("(84) F5LLJ") == true)   // Optimize F5LLJ ...
+            call_activ = "(84) F5LLJ V>U";
+            
           if (call_previous_next != call_activ) {
             call_previous_next = call_activ;
             qso++;
           }
         }
+
+        call_time = "Last TX ";
+        
+        if(timeinfo->tm_hour < 10) {
+          call_time += "0";
+        }
+        call_time += timeinfo->tm_hour;
+        call_time += ":";
+        if(timeinfo->tm_min < 10) {
+          call_time += "0";
+        }  
+        call_time += timeinfo->tm_min;
         
         tab = (WIDTH - call_activ.length()) / 2;
         lcd.setCursor(tab, 1);        
@@ -162,11 +206,20 @@ void loop() {
 
         call_previous = call_previous_next;
 
-        tmp = "Total TX ";
-        tmp += qso;
-        tab = (WIDTH - tmp.length()) / 2;
-        lcd.setCursor(tab, 1);
-        lcd.print(tmp);
+        if(blanc_alternate == true) {               //Total TX
+          tmp = "Total TX ";
+          tmp += qso;
+          tab = (WIDTH - tmp.length()) / 2;
+          lcd.setCursor(tab, 1);
+          lcd.print(tmp);
+          blanc_alternate = false;
+        }
+        else {                                      //Last TX
+          tab = (WIDTH - call_time.length()) / 2;
+          lcd.setCursor(tab, 1);
+          lcd.print(call_time);
+          blanc_alternate = true;
+        }
       }
     }
     http.end();      //Close connection
