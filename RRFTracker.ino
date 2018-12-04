@@ -42,11 +42,12 @@ String call_activ;
 String call_previous = "RRF";
 String call_previous_next = "RRF";
 String call_time = "Waiting TX";
+String start_time = "Boot at ";
 
 String tmp;
 
 bool blanc = true;
-bool blanc_alternate = true;
+int blanc_alternate = 0;
 int qso = 0;
 
 void setup() {
@@ -121,7 +122,20 @@ void loop() {
     int httpCode = http.GET();  //Send the request
 
     if (httpCode > 0) {                                 //Check the returning code
+      if(start_time == "Boot at ") {                    //Format start_time...
+        if(timeinfo->tm_hour < 10) {
+          start_time += "0";
+        }
+        start_time += timeinfo->tm_hour;
+        start_time += ":";
+        if(timeinfo->tm_min < 10) {
+          start_time += "0";
+        }  
+        start_time += timeinfo->tm_min;
+      }
+
       page = http.getString();                          //Get the request response page
+      yield();
       search_start = page.indexOf("transmitter\":\"");  //Search this pattern
       search_start += 14;                               //Shift...
       search_stop = page.indexOf("\"", search_start);   //And close it...
@@ -206,23 +220,31 @@ void loop() {
 
         call_previous = call_previous_next;
 
-        if(blanc_alternate == true) {               //Total TX
+        if(blanc_alternate == 0) {               //Total TX
           tmp = "Total TX ";
           tmp += qso;
           tab = (WIDTH - tmp.length()) / 2;
           lcd.setCursor(tab, 1);
           lcd.print(tmp);
-          blanc_alternate = false;
+          blanc_alternate = 1;
         }
-        else {                                      //Last TX
+        else if(blanc_alternate == 1) {         //Last TX time
           tab = (WIDTH - call_time.length()) / 2;
           lcd.setCursor(tab, 1);
           lcd.print(call_time);
-          blanc_alternate = true;
+          blanc_alternate = 2;
+        }
+        else {                                  //Boot time
+          tab = (WIDTH - start_time.length()) / 2;
+          lcd.setCursor(tab, 1);
+          lcd.print(start_time);
+          blanc_alternate = 0;          
         }
       }
     }
     http.end();      //Close connection
   }
+  yield();
   delay(REFRESH);    //Send a request after a pause
+  yield();
 }
