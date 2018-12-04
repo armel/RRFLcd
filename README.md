@@ -10,7 +10,8 @@ Au repos, si aucune station n'est en émission, RRFTracker affichera sur,
 * la première ligne: l'indicatif du dernier noeud étant passé en émission,
 * la seconde ligne: 
 	* le nombre de passages en émission depuis la mise sous tension du RRFTracker,
-	* l'heure du dernier passage en émission.
+	* l'heure du dernier passage en émission,
+	* l'heure de démarrage du RRFTracker.
 
 Si un QSO est en cours, RRFTracker affichera sur,
 
