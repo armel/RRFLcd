@@ -9,32 +9,32 @@
 #include <ESP8266HTTPClient.h>
 #include <time.h>
 
-//Time interval for the RRFTracker to refresh itself
+// Time interval for the RRFTracker to refresh itself
 
-#define REFRESH 3000  // 3 secondes...
+#define REFRESH 3000  // Wait for 3 secondes...
 
-//I2C LCD settings
+// I2C LCD settings
 
 #define WIDTH   16
 #define HEIGHT   2
 
 LiquidCrystal_I2C lcd(0x27, WIDTH, HEIGHT); // Change I2C adress 0x27, width and size if necessary...
 
-//If debug, set true...
+// If debug, set true...
 
 bool debug = false;
 
-//Wifi config, change it !
+// Wifi config, change it !
 
 const char* ssid     = "Your SSID";
 const char* password = "Your Password";
 
-//Time config
+// Time config
 
 int timezone = 1;
 int dst = 0;
 
-//Global variables, not really clean...
+// Global variables, not really clean...
 
 String url = "http://rrf.f5nlg.ovh/";
 
@@ -51,7 +51,7 @@ int blanc_alternate = 0;
 int qso = 0;
 
 void setup() {
-  //Init Debug mode if true...
+  // Init Debug mode if true...
   if(debug == true) {
     Serial.begin(115200);
   }
@@ -61,14 +61,14 @@ void setup() {
   pinMode(D5, OUTPUT);        // Transmitter activ
   pinMode(D8, OUTPUT);        // Transmitter inactiv
 
-  //Init LCD
+  // Init LCD
   lcd.begin(WIDTH, HEIGHT);
   lcd.init();
   
-  //Turn on the LCD backlight.
+  // Turn on the LCD backlight.
   lcd.backlight();
 
-  //We start by connecting to a WiFi network
+  // We start by connecting to a WiFi network
   lcd.setCursor(0, 0);
   lcd.print("Connecting to ");
   lcd.setCursor(0, 1);
@@ -92,7 +92,7 @@ void setup() {
 
   lcd.clear();
 
-  //Time configuration
+  // Time configuration
   lcd.setCursor(0, 0);
   lcd.print("Waiting for time");
   lcd.setCursor(0, 1);
@@ -117,12 +117,12 @@ void loop() {
   if (WiFi.status() == WL_CONNECTED) {
 
     digitalWrite(D4, HIGH);
-    HTTPClient http;            //Declare an object of class HTTPClient
-    http.begin(url);            //Specify request destination
-    int httpCode = http.GET();  //Send the request
+    HTTPClient http;            // Declare an object of class HTTPClient
+    http.begin(url);            // Specify request destination
+    int httpCode = http.GET();  // Send the request
 
-    if (httpCode > 0) {                                 //Check the returning code
-      if(start_time == "Boot at ") {                    //Format start_time...
+    if (httpCode > 0) {                                 // Check the returning code
+      if(start_time == "Boot at ") {                    // Format start_time...
         if(timeinfo->tm_hour < 10) {
           start_time += "0";
         }
@@ -134,11 +134,11 @@ void loop() {
         start_time += timeinfo->tm_min;
       }
 
-      page = http.getString();                          //Get the request response page
-      yield();
-      search_start = page.indexOf("transmitter\":\"");  //Search this pattern
-      search_start += 14;                               //Shift...
-      search_stop = page.indexOf("\"", search_start);   //And close it...
+      page = http.getString();                          // Get the request response page
+      yield();                                          // Watchdog...
+      search_start = page.indexOf("transmitter\":\"");  // Search this pattern
+      search_start += 14;                               // Shift...
+      search_stop = page.indexOf("\"", search_start);   // And close it...
 
       digitalWrite(D4, LOW);
       
@@ -162,7 +162,7 @@ void loop() {
       lcd.setCursor(tab, 0);
       lcd.print(call_previous);
 
-      //If transmitter...
+      // If transmitter...
       
       if (search_stop != search_start) {
         blanc = false;
@@ -220,7 +220,7 @@ void loop() {
 
         call_previous = call_previous_next;
 
-        if(blanc_alternate == 0) {               //Total TX
+        if(blanc_alternate == 0) {               // Total TX
           tmp = "Total TX ";
           tmp += qso;
           tab = (WIDTH - tmp.length()) / 2;
@@ -228,13 +228,13 @@ void loop() {
           lcd.print(tmp);
           blanc_alternate = 1;
         }
-        else if(blanc_alternate == 1) {         //Last TX time
+        else if(blanc_alternate == 1) {         // Last TX time
           tab = (WIDTH - call_time.length()) / 2;
           lcd.setCursor(tab, 1);
           lcd.print(call_time);
           blanc_alternate = 2;
         }
-        else {                                  //Boot time
+        else {                                  // Boot time
           tab = (WIDTH - start_time.length()) / 2;
           lcd.setCursor(tab, 1);
           lcd.print(start_time);
@@ -242,9 +242,9 @@ void loop() {
         }
       }
     }
-    http.end();      //Close connection
+    http.end();      // Close connection
   }
   yield();
-  delay(REFRESH);    //Send a request after a pause
+  delay(REFRESH);    // Send a request after a pause
   yield();
 }
