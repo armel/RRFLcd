@@ -160,7 +160,6 @@ void loop() {
       // If transmitter...
       
       if (search_stop != search_start) {
-        blanc = false;
         tmp = page.substring(search_start, search_stop);
         
         if (tmp == "RRF1") {
@@ -184,6 +183,9 @@ void loop() {
           if (call_previous_next != call_activ) {
             call_previous_next = call_activ;
             qso++;
+          }
+          else {
+            blanc = false;
           }
         }
 
@@ -215,21 +217,28 @@ void loop() {
 
         call_previous = call_previous_next;
 
-        if(blanc_alternate == 0) {               // TX today
+        if(blanc_alternate == 0) {              // Last TX time
+          tab = (WIDTH - call_time.length()) / 2;
+          lcd.setCursor(tab, 1);
+          lcd.print(call_time);
+          blanc_alternate = 1;
+        }
+        else if(blanc_alternate == 1) {         // TX today
           tmp = "TX Today ";
           tmp += qso;
           tab = (WIDTH - tmp.length()) / 2;
           lcd.setCursor(tab, 1);
           lcd.print(tmp);
-          blanc_alternate = 1;
-        }
-        else if(blanc_alternate == 1) {         // Last TX time
-          tab = (WIDTH - call_time.length()) / 2;
-          lcd.setCursor(tab, 1);
-          lcd.print(call_time);
           blanc_alternate = 2;
         }
-        else if(blanc_alternate == 2) {         // TX total
+        else if(blanc_alternate == 2) {         // Boot time
+          start_time = "Up " + uptime((long)now - (long)start);
+          tab = (WIDTH - start_time.length()) / 2;
+          lcd.setCursor(tab, 1);
+          lcd.print(start_time);
+          blanc_alternate = 3;          
+        }        
+        else if(blanc_alternate == 3) {         // TX total
           if(timeinfo->tm_hour == 0 && timeinfo->tm_min == 0) {
             qso_total += qso;
             qso = 0;
@@ -239,14 +248,7 @@ void loop() {
           tab = (WIDTH - tmp.length()) / 2;
           lcd.setCursor(tab, 1);
           lcd.print(tmp);
-          blanc_alternate = 3;
-        }
-        else if(blanc_alternate == 3) {         // Boot time
-          start_time = "Up " + uptime((long)now - (long)start);
-          tab = (WIDTH - start_time.length()) / 2;
-          lcd.setCursor(tab, 1);
-          lcd.print(start_time);
-          blanc_alternate = 0;          
+          blanc_alternate = 0;
         }
       }
     }
