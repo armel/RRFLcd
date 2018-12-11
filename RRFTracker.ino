@@ -33,6 +33,7 @@ const char* password = "Your Password";
 
 int timezone = 1;
 int dst = 0;
+time_t start;
 
 // Global variables, not really clean...
 
@@ -42,13 +43,15 @@ String call_activ;
 String call_previous = "RRF";
 String call_previous_next = "RRF";
 String call_time = "Waiting TX";
-String start_time = "Boot at ";
+String start_time = "";
 
 String tmp;
 
 bool blanc = true;
 int blanc_alternate = 0;
 int qso = 0;
+int qso_total = 0;
+int qso_swap = 0;
 
 void setup() {
   // Init Debug mode if true...
@@ -122,18 +125,10 @@ void loop() {
     int httpCode = http.GET();  // Send the request
 
     if (httpCode > 0) {                                 // Check the returning code
-      if(start_time == "Boot at ") {                    // Format start_time...
-        if(timeinfo->tm_hour < 10) {
-          start_time += "0";
-        }
-        start_time += timeinfo->tm_hour;
-        start_time += ":";
-        if(timeinfo->tm_min < 10) {
-          start_time += "0";
-        }  
-        start_time += timeinfo->tm_min;
+      if(start_time == "") {                            // Format start_time...
+          start = now;
       }
-
+      
       page = http.getString();                          // Get the request response page
       yield();                                          // Watchdog...
       search_start = page.indexOf("transmitter\":\"");  // Search this pattern
@@ -220,8 +215,8 @@ void loop() {
 
         call_previous = call_previous_next;
 
-        if(blanc_alternate == 0) {               // Total TX
-          tmp = "Total TX ";
+        if(blanc_alternate == 0) {               // TX today
+          tmp = "TX Today ";
           tmp += qso;
           tab = (WIDTH - tmp.length()) / 2;
           lcd.setCursor(tab, 1);
@@ -234,7 +229,20 @@ void loop() {
           lcd.print(call_time);
           blanc_alternate = 2;
         }
-        else {                                  // Boot time
+        else if(blanc_alternate == 2) {         // TX total
+          if(timeinfo->tm_hour == 0 && timeinfo->tm_min == 0) {
+            qso_total += qso;
+            qso = 0;
+          }
+          tmp = "TX Total ";
+          tmp += qso_total;
+          tab = (WIDTH - tmp.length()) / 2;
+          lcd.setCursor(tab, 1);
+          lcd.print(tmp);
+          blanc_alternate = 3;
+        }
+        else if(blanc_alternate == 3) {         // Boot time
+          start_time = "Up " + uptime((long)now - (long)start);
           tab = (WIDTH - start_time.length()) / 2;
           lcd.setCursor(tab, 1);
           lcd.print(start_time);
@@ -248,3 +256,44 @@ void loop() {
   delay(REFRESH);    // Send a request after a pause
   yield();
 }
+
+// Convert timestamp in day, hour and minute
+
+String uptime(long n) {   
+  String tmp = "";
+  
+  int day = n / (24 * 3600); 
+  n = n % (24 * 3600); 
+  int hour = n / 3600; 
+  n %= 3600;
+  int minute = n / 60 ;
+  
+  if (day < 10) {
+    tmp += "0" + String(day);
+  }
+  else {
+    tmp += String(day);
+  }
+
+  tmp += " d, ";
+  
+  if (hour < 10) {
+    tmp += "0" + String(hour);
+  }
+  else {
+    tmp += String(hour);    
+  }
+
+  tmp += ":";
+
+  if (minute < 10) {
+    tmp += "0" + String(minute);
+  }
+  else {
+    tmp += String(minute);    
+  }
+
+  yield();
+  
+  return tmp;
+} 
