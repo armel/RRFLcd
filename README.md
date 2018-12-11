@@ -22,7 +22,7 @@ Si un QSO est en cours, RRFTracker affichera sur,
 Concernant les LEDs de status,
 
 * la LED bleu s'allume à chaque requête HTTP permettant de connaitre l'état du RRF,
-* la LED rouge s'allume si une émission est en court,
+* la LED rouge s'allume si une émission est en cours,
 * la LED verte s'allume si aucune émission.
 
 
