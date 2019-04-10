@@ -37,7 +37,7 @@ time_t start;
 
 // Global variables, not really clean...
 
-String url = "http://rrf.f5nlg.ovh/";
+String url = "http://rrf.f5nlg.ovh/api/svxlink/RRF";
 
 String call_activ;
 String call_previous = "RRF";
