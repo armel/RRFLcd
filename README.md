@@ -1,20 +1,20 @@
-# RRFTracker
+# RRFLcd
 Suivi temps réel de l'activité du réseau [RRF](https://f5nlg.wordpress.com/2015/12/28/nouveau-reseau-french-repeater-network/) (Réseau des Répéteurs Francophones). Une video du fonctionnement est visible sur [Youtube](https://www.youtube.com/watch?v=3QY_RpRebKc) ;)
 
 ## Principe de fonctionnement
 
-RRFTracker permet de suivre en temps réel l'activité du réseau RRF.
+RRFLcd permet de suivre en temps réel l'activité du réseau RRF.
 
-Au repos, si aucune station n'est en émission, RRFTracker affichera sur,
+Au repos, si aucune station n'est en émission, RRFLcd affichera sur,
 
 * la première ligne: l'indicatif du dernier noeud étant passé en émission,
 * la seconde ligne: 
 	* l'heure du dernier passage en émission,
 	* le nombre de passages en émission sur la journée (depuis 00h00),
-	* le temps depuis lequel fonctionne le RRFTracker (uptime),
-	* le nombre de passage en émission depuis l'allumage du RRFTracker.
+	* le temps depuis lequel fonctionne le RRFLcd (uptime),
+	* le nombre de passage en émission depuis l'allumage du RRFLcd.
 
-Si un QSO est en cours, RRFTracker affichera sur,
+Si un QSO est en cours, RRFLcd affichera sur,
 
 * la première ligne: l'indicatif du dernier noeud étant passé en émission,
 * la seconde ligne: l'indicatif du noeud en cours d'émission.
@@ -43,4 +43,4 @@ Enfin, le choix des couleurs pour les LEDs est totalement arbitraire. Du reste, 
  
 ## Schéma de montage
 
-![alt text](https://github.com/armel/RRFTracker/blob/master/RRFTracker.png)
+![alt text](https://github.com/armel/RRFLcd/blob/master/RRFLcd.png)

@@ -1,7 +1,7 @@
 /*
-    RRFTracker
+    RRFLcd
     Learn more about RRF on https://f5nlg.wordpress.com
-    Check video about RRFTracker on https://www.youtube.com/watch?v=3QY_RpRebKc
+    Check video about RRFLcd on https://www.youtube.com/watch?v=3QY_RpRebKc
 */
 
 #include <LiquidCrystal_I2C.h>
@@ -9,7 +9,7 @@
 #include <ESP8266HTTPClient.h>
 #include <time.h>
 
-// Time interval for the RRFTracker to refresh itself
+// Time interval for the RRFLcd to refresh itself
 
 #define REFRESH 3000  // Wait for 3 secondes...
 
